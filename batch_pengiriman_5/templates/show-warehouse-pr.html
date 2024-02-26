@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+
+{% endblock header %}
+
+{% block content %}
+<div class="container">
+    <br><br>
+    <h1 class="text-center">LIST WAREHOUSE PROVINSI / SATGAS</h1>
+    <br><br>
+
+    {% if request.session.role == "Admin Satgas" or request.session.role == "Supplier"%}
+        <table>
+            <tr>
+                <th>Provinsi</th>
+                <th>Lokasi</th>
+                {% if request.session.role == "Admin Satgas" %}
+                <th>Aksi</th>
+                {% endif %}
+            </tr>
+
+        {% for ware in wares %}
+
+            <tr>
+                <th>{{ware.provinsi}}</th>
+                <th>{{ware.jalan_no}}, {{ware.kelurahan}}, {{ware.kecamatan}}, {{ware.kabkot}}, ID :  {{ware.id}}</th>
+
+                {% if request.session.role == "Admin Satgas" %}
+                <th>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input required name="id_loc" type="hidden" class="form-control" id="id_loc" value="{{ware.id}}" >
+                        <div class="mb-3">
+                            <select name="action" id="action" class="form-control">
+                                <option value="delete">delete</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">Lakukan</button>
+                        <a href="/trig5/updatewares/{{ware.id}}">update</a>
+                    </form> 
+                </th>
+                {% endif %}
+
+            </tr>
+
+        {% endfor %}
+    
+        </table>
+        <br><br><br><br><br>
+    {% else %}
+
+        <h3 class="text-center">You need to be either a registered Supplier or an Admin Satgas</h3>
+
+    {% endif %}
+
+</div>
+{% endblock content %}

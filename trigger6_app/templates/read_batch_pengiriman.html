@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center">DATA BATCH PENGIRIMAN</h1>
+
+<div class="mb-3">
+    <label for="petugas" class="form-label">
+        {% if request.session.role == "Admin Satgas" %}
+            Petugas Satgas:
+        {% elif request.session.role == "Petugas Faskes" %}
+            Petugas Faskes:
+        {% elif request.session.role == "Petugas Distribusi" %}
+            Petugas Distribusi:
+        {% endif %}
+    </label>
+    <div id="petugas">
+        {% if request.session.role == 'Admin Satgas' %}
+        {{ admin_satgas.0.2 }}
+        {% elif request.session.role == 'Petugas Faskes' %}
+        {{ petugas_faskes.0.2 }}
+        {% elif request.session.role == 'Petugas Distribusi' %}
+        {{ petugas_distribusi.0.2 }}
+        {% endif %}
+    </div>
+</div>
+
+<div class="mb-3">
+    <span>Nomor Transaksi Sumber Daya: {{ no_transaksi.0.0 }}</span>
+</div>
+
+<div class="mb-3">
+    <span>Daftar batch pengiriman:</span>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">Kode Batch</th>
+            <th scope="col">Kendaraan</th>
+            <th scope="col">Petugas Distribusi</th>
+            <th scope="col">Asal</th>
+            <th scope="col">Tujuan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for batch in data_batch %}
+                <tr>
+                    {% for b in batch %}
+                    <td>{{ b }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+</div>
+{% endblock content %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+<div class="container">
+    <h1 class="text-center">Register</h1>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="tipe" class="form-label">Tipe Pengguna</label>
+            <select onchange="changeType(this)" name="tipe" id="tipe" class="form-control">
+                <option value="admin">Admin Satgas</option>
+                <option value="faskes">Petugas Faskes</option>
+                <option value="supplier">Supplier</option>
+                <option value="distribusi">Petugas Distribusi</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input required type="text" name="username" class="form-control" id="username">
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input required type="password" name="password" class="form-control" id="password">
+        </div>
+
+        <div class="mb-3">
+            <label for="nama" id="form-label">Nama Lengkap</label>
+            <input required type="text" name="fullname" id="nama" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <span>Alamat</span>
+            <div class="container">
+                
+                <div class="mb-3">
+                    <label for="kelurahan" class="form-label">Kelurahan</label>
+                    <input requried name="alamat-kelurahan" type="text" class="form-control" id="kelurahan">
+                </div>
+
+                <div class="mb-3">
+                    <label for="kecamatan" class="form-label">Kecamatan</label>
+                    <input requried name="alamat-kecamatan" type="text" class="form-control" id="kecamatan">
+                </div>
+
+                <div class="mb-3">
+                    <label for="kabupaten-kota" class="form-label">Kabupaten/Kota</label>
+                    <input requried name="alamat-kabupaten" type="text" class="form-control" id="kabupaten-kota">
+                </div> 
+
+                <div class="mb-3">
+                    <label for="provinsi" class="form-label">Provinsi</label>
+                    <input requried name="alamat-provinsi" type="text" class="form-control" id="provinsi">
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="no-telp" class="form-label">Nomor Telepon</label>
+            <input required name="no-telp" type="text" class="form-control" id="no-telp">
+        </div>
+
+        <div class="mb-3 hidden" id="organisasi-form">
+            <label for="organisasi" class="form-label">Nama Organisasi</label>
+            <input name="organisasi" type="text" id="organisasi" class="form-control">
+        </div>
+
+        <div class="mb-3 hidden" id="no-sim-form">
+            <label for="no-sim" class="form-label">Nomor SIM</label>
+            <input name="no-sim" type="text" id="no-sim" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block">Register</button>
+    </form>
+</div>
+
+<script>
+    function changeType(obj) {
+        const selectedIndex = obj.selectedIndex;
+        const organisasiForm = document.querySelector("#organisasi-form");
+        const simForm = document.querySelector("#no-sim-form");
+        console.log(organisasiForm);
+        if (selectedIndex === 0) {
+            organisasiForm.classList.add("hidden");
+            simForm.classList.add("hidden");
+        } else if (selectedIndex === 1) {
+            organisasiForm.classList.add("hidden");
+            simForm.classList.add("hidden");
+        } else if (selectedIndex === 2) {
+            organisasiForm.classList.remove("hidden");
+            simForm.classList.add("hidden");
+        } else if (selectedIndex === 3) {
+            organisasiForm.classList.add("hidden");
+            simForm.classList.remove("hidden");
+        }
+    }
+</script>
+{% endblock content %}

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible show fade" role="alert">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+{% endfor %}
+{% endif %}
+    <h1 class="text-center">PILIH PERMOHONAN YANG MAU DIBUATKAN BATCH</h1>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">No. Transaksi</th>
+            <th scope="col">Petugas Faskes</th>
+            <th scope="col">Kode Nasional Faskes</th>
+            <th scope="col">Total Berat (kg)</th>
+            <th scope="col">Status Permohonan</th>
+            <th scope="col">Status Batch</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for data in data_permohonan %}
+          <tr>
+                {% for d in data %}
+                    {% if d != None %}
+                    <td>{{ d }}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                {% endfor %}
+                <!--Tombol Buat Batch hanya akan muncul pada permohonan sumber daya
+                    dengan status permohonan PRO dan status batch PRO atau Null.
+                -->
+                {% if data.4 == "PRO" and request.session.role == "Admin Satgas"%}
+                    {% if data.5 == "PRO" %}
+                <td>
+                    <form action="{% url 'trigger6_app:form_batch_pengiriman' %}" method="POST">
+                        {% csrf_token %}
+                        <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                        <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                        <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-buat-batch">Buat batch</button>
+                    </form>
+                    <form action="{% url 'trigger6_app:update_riwayat_status' %}" method="POST">
+                      {% csrf_token %}
+                      <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                      <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                      <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-ubah-status">Ubah Status</button>
+                    </form>
+                    <form action="{% url 'trigger6_app:read_riwayat_status' %}" method="POST">
+                      {% csrf_token %}
+                      <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                      <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                      <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-riwayat">Riwayat Status</button>
+                    </form>
+                </td>
+                    {% elif data.5 == None  %}
+                      <td>
+                        <form action="{% url 'trigger6_app:form_batch_pengiriman' %}" method="POST">
+                            {% csrf_token %}
+                            <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                            <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                            <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-buat-batch">Buat batch</button>
+                        </form>
+                      </td>
+                    {% endif %}
+                {% elif data.4 == "MAS" or data.4 == "FIN" %}
+                  {% if request.session.role == "Admin Satgas" or request.session.role == "Petugas Faskes" or request.session.role == "Petugas Distribusi" %}
+                    {% if data.5 == "OTW" or data.5 == "DLV" or data.5 == "PEN" or data.5 == "HLG" or data.5 == "RET" %}
+                    <td>
+                      <form action="{% url 'trigger6_app:read_batch_pengiriman' %}" method="POST">
+                        {% csrf_token %}
+                        <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                        <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                        <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-detail">Detail</button>
+                      </form>
+                      {% if request.session.role == "Admin Satgas" or request.session.role == "Petugas Distribusi" %}
+                        <form action="{% url 'trigger6_app:read_riwayat_status' %}" method="POST">
+                          {% csrf_token %}
+                          <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                          <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                          <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-riwayat">Riwayat Status</button>
+                        </form>
+                      {% endif %}
+                      {% if data.5 == "OTW" and request.session.role == "Admin Satgas" %}
+                      <form action="{% url 'trigger6_app:update_riwayat_status' %}" method="POST">
+                        {% csrf_token %}
+                        <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                        <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                        <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-ubah-status">Ubah Status</button>
+                      </form>
+                      {% endif %}
+                    </td>
+                    {% elif data.5 == "PRO" %}
+                    <td>
+                      <form action="{% url 'trigger6_app:update_riwayat_status' %}" method="POST">
+                        {% csrf_token %}
+                        <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                        <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                        <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-ubah-status">Ubah Status</button>
+                      </form>
+                      <form action="{% url 'trigger6_app:read_riwayat_status' %}" method="POST">
+                        {% csrf_token %}
+                        <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                        <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                        <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-riwayat">Riwayat Status</button>
+                      </form>
+                    </td>
+                    {% endif %}
+                  {% endif %}
+
+                {% elif data.5 == "PRO" or data.5 == "OTW" %}
+                  {% if request.session.role == "Admin Satgas" %}
+                  <td>
+                    <form action="{% url 'trigger6_app:update_riwayat_status' %}" method="POST">
+                      {% csrf_token %}
+                      <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                      <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                      <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-ubah-status">Ubah Status</button>
+                    </form>
+                    <form action="{% url 'trigger6_app:read_riwayat_status' %}" method="POST">
+                      {% csrf_token %}
+                      <input hidden name="nomor-transaksi" value="{{ data.0 }}">
+                      <input hidden name="petugas-faskes" value="{{ data.1 }}">
+                      <button type="submit" class="btn btn-primary btn-sm mb-1" id="tombol-riwayat">Riwayat Status</button>
+                    </form>
+                  </td>
+                  {% endif %}
+                {% endif %}
+          </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+{% endblock content %}

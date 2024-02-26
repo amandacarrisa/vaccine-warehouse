@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .tabelmargin{
+        padding: 32px;
+    }
+</style>
+
+
+
+<h1 > <center> Daftar Lokasi </center></h1>
+<div class="tabelmargin table-responsive ">
+<table class="table justify-content-center">
+    <thead class="bg-danger text-white align-items-center">
+      <tr>
+        <th scope="col">ID Lokasi</th>
+        <th scope="col">Provinsi</th>
+        <th scope="col">Kabupaten/Kota</th>
+        <th scope="col">Kecamatan</th>
+        <th scope="col">Kelurahan</th>
+        <th scope="col">Nomor Jalan</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for lokasi in data_lokasi %}
+    <tr>
+        <td>{{ lokasi.id }}</td>
+        <td>{{ lokasi.provinsi }}</td>
+        <td>{{ lokasi.kabkot }}</td>
+        <td>{{ lokasi.kecamatan }}</td>
+        <td>{{ lokasi.kelurahan }}</td>
+        <td>{{ lokasi.jalan_no }}</td>
+        {% if request.session.role == "Admin Satgas" %}
+        <td>
+          <button class="btn btn-primary btn-am bg-success update" 
+          id-lokasi="{{ lokasi.id }}"
+          lokasi-provinsi="{{ lokasi.provinsi }}"
+          lokasi-kabkot="{{ lokasi.kabkot }}"
+          lokasi-kecamatan="{{ lokasi.kecamatan }}"
+          lokasi-kelurahan="{{ lokasi.kelurahan }}"
+          jalan-no="{{ lokasi.jalan_no }}"
+          >Update</button>
+
+          <div class="modal fade" id="update-lokasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Form Update Lokasi</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/" id="form-update">
+                      {% csrf_token %}
+                      
+                        <div class="form-group">
+                            <label for="idnya">ID Lokasi</label>
+                            <input type="text" class="form-control " id="idnya" name="u-id-lokasi" placeholder = "ID Lokasi" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="provinsinya">Provinsi</label>
+                            <select class="form-control" id="provinsinya" name="u-lokasi-provinsi" required>
+                        {% for lok in data_lokasi %}
+                            <option> {{ lok.provinsi }} </option>
+                        {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="kabkotnya">Kabupaten/Kota</label>
+                            <input type="text" class="form-control " id="kabkotnya" name="u-lokasi-kabkot" placeholder="Kabkot" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="kecamatannya">Kecamatan</label>
+                            <input type="text" class="form-control " id="kecamatannya" name="u-lokasi-kecamatan"  placeholder="Kecamatan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="kelurahannya">Kelurahan</label>
+                            <input type="text" class="form-control " id="kelurahannya" name="u-lokasi-kelurahan" placeholder="Kelurahan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nojalannya">Nomor Jalan</label>
+                            <input type="text" class="form-control " id="nojalannya" name="u-jalan-no"  placeholder="Nomor Jalan" required>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          
+                          <button type="submit" class="btn bg-success btn-primary ">Submit</button>
+                          
+                        </div>
+                         
+                      </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% comment %} <a href="/crulokasi/deletelokasi/{{ lokasi.id }}">
+          <button type="button" class="btn btn-primary btn-am bg-danger">Delete</button>
+          </a> {% endcomment %}
+      </td>
+      {% endif %}
+			</tr>
+    {% endfor %}  
+   
+    </tbody>
+  </table>
+</div>
+ 
+
+  <script>
+    $('.update').click(function(){
+      $('#update-lokasi').modal();
+    var idlokasi = $(this).attr('id-lokasi')
+    var idprovinsi = $(this).attr('lokasi-provinsi')
+    var idkabkot = $(this).attr('lokasi-kabkot')
+    var idkecamatan = $(this).attr('lokasi-kecamatan')
+    var idkelurahan = $(this).attr('lokasi-kelurahan')
+    var idnojalan = $(this).attr('jalan-no')
+
+    
+    $('#form-update').attr('action', '/crulokasi/updatelokasi/'+idlokasi)
+    $('#idnya').val(idlokasi)
+    $('#provinsinya').val(idprovinsi)
+    $('#kabkotnya').val(idkabkot)
+    $('#kecamatannya').val(idkecamatan)
+    $('#kelurahannya').val(idkelurahan)
+    $('#nojalannya').val(idnojalan)
+    })
+
+  </script>
+  {% endblock %}

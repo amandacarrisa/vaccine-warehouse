@@ -1,0 +1,25 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd8b6oeu277mie3', 
+        'USER': 'zwlmlcjoqfwkkj', 
+        'PASSWORD': 'f75a3872607a45dd46a40dfa6504da7fcbec5d3c1af7bb27df132d9b1d18bbe0',
+        'HOST': 'ec2-35-170-85-206.compute-1.amazonaws.com', 
+        'PORT': '5432',
+        'managed': True
+
+    }
+}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres', 
+        'USER': 'postgres', 
+        'PASSWORD': 'ALOHOMORA',
+        'HOST': 'localhost', 
+        'PORT': '5432',
+        'managed': True
+
+    }
+}

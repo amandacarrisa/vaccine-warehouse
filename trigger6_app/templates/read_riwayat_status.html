@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center">RIWAYAT STATUS BATCH PENGIRIMAN</h1>
+
+<div class="mb-3">
+    <label for="no-transaksi" class="form-label">Nomor Transaksi</label>
+    <input readonly id="no-transaksi" name="no-transaksi" class="form-control" value="{{ no_transaksi }}">
+</div>
+
+<div>
+    Riwayat Status:
+</div>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Kode Status</th>
+        <th scope="col">Status</th>
+        <th scope="col">Username Admin Satgas</th>
+        <th scope="col">Tanggal Persetujuan</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for riwayat in riwayat_status %}
+            <tr>
+                {% for r in riwayat %}
+                <td>{{ r }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

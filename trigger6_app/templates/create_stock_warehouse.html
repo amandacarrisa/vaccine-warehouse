@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{message.tags}} alert-dismissible show fade" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+<h1 class="text-center">FORM TAMBAH STOCK WAREHOUSE SATGAS</h1>
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="id-lokasi" class="form-label">ID Lokasi</label>
+            <select name="id-lokasi" id="id-lokasi" class="form-control">
+                {% for lokasi in list_lokasi %}
+                <option>
+                    {{ lokasi.0 }}
+                </option>
+                <span hidden id="provinsi" class="span-loc">
+                    {{ lokasi.1 }}, {{ lokasi.2 }}, {{ lokasi.3 }}, {{ lokasi.4 }}, {{ lokasi.5 }}
+                </span>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="span-detloc" class="form-label">Detail Lokasi</label>
+            <div id="span-detloc"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="id-item-sumber-daya" class="form-label">Kode Item Sumber Daya</label>
+            <select name="id-item-sumber-daya" id="id-item-sumber-daya" class="form-control">
+                {% for item in list_item_sumber_daya %}
+                <option>
+                    {{ item.0 }}
+                </option>
+                <span hidden id="item">
+                    {{ item.1 }},  {{ item.2 }}, {{ item.3 }}, {{ item.4 }}, {{ item.5 }}
+                </span>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="span-isd" class="form-label">Detail Item Sumber Daya</label>
+            <div id="span-isd"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="jumlah" id="form-label">Jumlah</label>
+            <input type="number" name="jumlah" id="jumlah" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block" id="tombol-submit">Tambah</button>
+    </form>
+</div>
+        <script>
+            $('document').ready(function() {
+                $("#id-lokasi").on("click", function(event) {
+                    event.preventDefault();
+                    tes = $("#id-lokasi").val();
+                    kerangka = $("#id-lokasi").children();
+                    var detail;
+                    for(const k in kerangka) {
+                        if(tes == kerangka[k].label) {
+                            detail = kerangka[k].nextSibling.data.split(",");
+                            break;
+                        }
+                    }
+                    $("#span-detloc").empty()
+                    $("#span-detloc").append("<span>Provinsi: " + detail[0].trim() + "</span> <br>");
+                    $("#span-detloc").append("<span>Kabupaten/Kota: " + detail[1].trim() + "</span> <br>");
+                    $("#span-detloc").append("<span>Kecamatan: " + detail[2].trim() + "</span> <br>");
+                    $("#span-detloc").append("<span>Kelurahan: " + detail[3].trim() + "</span> <br>");
+                    $("#span-detloc").append("<span>Nomor Jalan: " + detail[4].trim() + "</span> <br>");
+                })
+
+                $("#id-item-sumber-daya").on("click", function(event) {
+                    event.preventDefault();
+                    tes = $("#id-item-sumber-daya").val();
+                    kerangka = $("#id-item-sumber-daya").children();
+                    var detail;
+                    
+                    for(const k in kerangka) {
+                        console.log(kerangka[k].label);
+                        if(tes == kerangka[k].label) {
+                            detail = kerangka[k].nextSibling.data.split(",");
+                            console.log(detail)
+                            break;
+                        }
+                    }
+
+                    $("#span-isd").empty()
+                    $("#span-isd").append("<span>Username Supplier: " + detail[0].trim() + "</span> <br>");
+                    $("#span-isd").append("<span>Nama Item: " + detail[1].trim() + "</span> <br>");
+                    $("#span-isd").append("<span>Harga Satuan: " + detail[2].trim() + "</span> <br>");
+                    $("#span-isd").append("<span>Berat Satuan: " + detail[3].trim() + "</span> <br>");
+                    $("#span-isd").append("<span>Kode Tipe Item: " + detail[4].trim() + "</span> <br>");
+                })
+
+                $("#tombol-submit").on("click", function(event) {
+                    if(!$("#jumlah").val()) {
+                        event.preventDefault()
+                        alert("Terdapat data yang belum diisi, silakan lengkapi datanya dulu")
+                    }
+                })
+            })
+        </script>
+
+{% endblock content %}

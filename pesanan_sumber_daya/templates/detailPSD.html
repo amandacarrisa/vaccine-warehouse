@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Detail Pesanan Sumber Daya</h1>
+    <p><strong>Nomor Transaksi: </strong> {{ pesanan.0.0 }}</p>
+    <p><strong>Petugas: </strong> {{ pesanan.0.1 }}</p>
+    <p><strong>Tanggal: </strong> {{ pesanan.0.4 }}</p>
+    <p><strong>Supplier: </strong> {{ pesanan.0.14 }}</p>
+    <p><strong>Daftar Pesanan Item: </strong></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nomor Urut</th>
+                <th scope="col">Item</th>
+                <th scope="col">Harga Satuan</th>
+                <th scope="col">Jumlah Item</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for i in pesanan %}
+                <tr>
+                    <th scope="row">{{ i.8 }}</th>
+                    <td>{{ item.15 }}</td>
+                    <td>{{ item.16 }}</td>
+                    <td>{{ item.11 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total Harga: </strong> {{ pesanan.0.2 }}</p>
+</div>
+{% endblock content %}

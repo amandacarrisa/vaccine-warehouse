@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <section id="stokFaskes">
+        <h1 class="text-center">Form Tambah Stock Faskes</h1>
+        <form method="POST" id="add-stok">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="kodeFaskes" class="form-label">Kode Faskes</label>
+                <select class="form-select" name="kodeFaskes" id="kodeFaskes" required>
+                    <option selected disabled value="">Pilih Faskes :</option>
+                    {% for i in dataFaskes %}
+                    <option value="{{ i.0 }}">{{ i.0 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="faskes" class="form-label">Faskes</label>
+                <input class="form-control" type="text" placeholder="Pilih kode faskes" name="faskes" id="faskes" disabled required>
+            </div>
+            <div class="mb-3">
+                <label for="kodeItem" class="form-label">Kode Item</label>
+                <select class="form-select" name="kodeItem" id="kodeItem">
+                    <option selected disabled value="">Pilih Item :</option>
+                    {% for i in dataISD %}
+                    <option value="{{ i.0 }}">{{ i.0 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="itemSumberDaya" class="form-label">Item Sumber Daya</label>
+                <input class="form-control" type="text" placeholder="Pilih kode item" name="itemSumberDaya" id="itemSumberDaya" disabled required>
+            </div>
+            <div class="mb-3">
+                <label for="jumlah" class="form-label">Jumlah</label>
+                <input class="form-control" type="number" placeholder="Tulis jumlah item" min=0 name="jumlah" id="jumlah" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">SIMPAN</button>
+        </form>
+    </section>
+</div>
+
+<script>
+    var dataFaskes = JSON.parse("{{ dataFaskesJSON|escapejs }}")
+    var dataISD = JSON.parse("{{ dataISDJSON|escapejs }}")
+
+    $(document).ready(function() {
+        $("#kodeFaskes").on("change", function() {
+            let tempId = $(this).val();
+            for (var i = 0; i < dataFaskes.length; i++) {
+                if(dataFaskes[i][0] === tempId) {
+                    $("#faskes").val(dataFaskes[i][1])
+                }
+            }
+        })
+
+        $("#kodeItem").on("change", function() {
+            let tempId = $(this).val();
+            for (var i = 0; i < dataISD.length; i++) {
+                if(dataISD[i][0] === tempId) {
+                    $("#itemSumberDaya").val(dataISD[i][1])
+                }
+            }
+        })
+    })
+
+    $("#add-stok").submit((event) => {
+        event.preventDefault();
+        console.log($('#kodeFaskes').val())
+        console.log($('#kodeItem').val())
+        console.log($('#jumlah').val())
+        if($('#kodeFaskes').val() == null) {
+            alert("Terdapat data yang belum diisi, silahkan lengkapi data terlebih dahulu")
+            return;
+        }
+        if($('#kodeItem').val() == null) {
+            alert("Terdapat data yang belum diisi, silahkan lengkapi data terlebih dahulu")
+            return;
+        }
+        if($('#jumlah').val() == null) {
+            alert("Terdapat data yang belum diisi, silahkan lengkapi data terlebih dahulu")
+            return;
+        }
+
+        $.post(
+            `/stok-faskes/create/post/`, {
+                kodeFaskes: $('#kodeFaskes').val(),
+                kodeItem: $('#kodeItem').val(),
+                jumlah: $('#jumlah').val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken').val()
+            },
+            () => {
+                window.location.href = '/stok-faskes/read/'
+            }
+        )
+    })
+
+
+</script>
+{% endblock content %}

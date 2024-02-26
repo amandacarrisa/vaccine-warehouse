@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center">FORM BATCH PENGIRIMAN</h1>
+<form method="POST" action="{% url 'trigger6_app:create_batch_pengiriman' %}">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="admin-satgas" class="form-label">Petugas Satgas</label>
+        <input readonly id="admin-satgas" name="admin-satgas" class="form-control" value="{{ request.session.username }}">
+    </div>
+
+    <div class="mb-3">
+        <label for="nomor-transaksi" class="form-label">Nomor Transaksi Sumber Daya</label>
+        <input readonly id="nomor-transaksi" name="nomor-transaksi" class="form-control" value="{{ no_transaksi }}">
+    </div>
+
+    <div class="mb-3">
+        <span>Buat batch pengiriman:</span>
+        <br>
+        <div class="mb-3">
+            <label for="kode-batch" class="form-label">Nomor Transaksi Sumber Daya</label>
+            <input readonly id="kode-batch" name="kode-batch" class="form-control" value="{{ kode_batch }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="plat" class="form-label">Pilihan Kendaraan</label>
+            <input disabled id="plat" name="plat" class="form-control" value="">
+        </div>
+
+        <br>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Jenis</th>
+                <th scope="col">Nama Kendaraan</th>
+                <th scope="col">Nomor Kendaraan</th>
+                <th scope="col">Berat Maksimum</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for k in kendaraan %}
+                    <tr>
+                        <td>{{ k.2 }}</td>
+                        <td>{{ k.1 }}</td>
+                        <td class="no-kendaraan">{{ k.0 }}</td>
+                        <td>{{ k.3 }}</td>
+                        <td><button type="button" class="btn btn-primary btn-sm mb-1 tombol-pilih">Pilih</button></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="mb-3">
+            <label for="distribusi" class="form-label">Pilihan Petugas Distribusi</label>
+            <input disabled id="distribusi" name="distribusi" class="form-control" value="">
+        </div>
+        <br>
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Nama</th>
+                <th scope="col">Nomor SIM</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for petugas in petugas_distribusi %}
+                    <tr>
+                        <td hidden class="petugas">{{ petugas.0 }}</td>
+                        <td>{{ petugas.1 }}</td>
+                        <td>{{ petugas.2 }}</td>
+                        <td><button type="button" class="btn btn-primary btn-sm mb-1 tombol-pilih-petugas">Pilih</button></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-success btn-block" id="tombol-submit">Tambah</button>
+    </div>
+    
+    <div class="mb-3">
+        <span>Daftar batch pengiriman:</span>
+        <br>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Kode Batch</th>
+                <th scope="col">Kendaraan</th>
+                <th scope="col">Petugas Distribusi</th>
+                <th scope="col">Asal</th>
+                <th scope="col">Tujuan</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for batch in display_batch %}
+                    <tr>
+                        {% for b in batch %}
+                        <td>{{ b }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+    </div>
+</form>
+
+<script>
+    $('document').ready(function() {
+        $(".tombol-pilih").on("click", function(event) {
+            event.preventDefault();
+            $("#plat").prop('disabled', true);
+            var plat = $(this).closest("tr").find(".no-kendaraan").text();
+            $("#plat").val(plat);
+            $("#plat").prop('disabled', false);
+            $("#plat").prop('readonly', true);
+        })
+
+        $(".tombol-pilih-petugas").on("click", function(event) {
+            event.preventDefault();
+            $("#distribusi").prop('disabled', true);
+            var distribusi = $(this).closest("tr").find(".petugas").text();
+            $("#distribusi").val(distribusi);
+            $("#distribusi").prop('disabled', false);
+            $("#distribusi").prop('readonly', true);
+        })
+
+        $("#tombol-submit").on("click", function(event) {
+            if(!$("#distribusi").val() || !$("#plat").val()) {
+                event.preventDefault()
+                alert("Terdapat data yang belum diisi, silakan lengkapi datanya dulu")
+            }
+        })
+    })
+</script>
+{% endblock content %}

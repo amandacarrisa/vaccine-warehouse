@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+
+{% endblock header %}
+
+{% block content %}
+
+<div class="container">
+
+<h1 class="text-center">WELCOME</h1>
+
+
+{% if request.session.role != "" %}
+
+    <h3 class="text-center">Hi {{ request.session.username }}, your role is {{ request.session.role }}</h3>
+
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Available Features</th>
+        </tr>
+        
+        <tr>
+            <td>3</td>
+            <td>
+
+                {% if request.session.role == 'Admin Satgas' %}
+
+                    <a href="{% url 'pesanan_sumber_daya:getPSD' %}">Create Pesanan Sumber Daya</a><br>
+                    <a href="{% url 'pesanan_sumber_daya:read' %}">RUD Pesanan Sumber Daya</a><br>
+                    <a href="{% url 'stok_faskes:getSF' %}">Create Stok Fasilitas Kesehatan</a><br>
+                    <a href="{% url 'stok_faskes:read' %}">RUD Stok Fasilitas Kesehatan + R Riwayat Status Pesanan Sumber Daya</a><br>
+
+
+                {% elif request.session.role == 'Supplier' %}
+
+                    <a href="{% url 'pesanan_sumber_daya:create' %}">R Pesanan Sumber Daya</a><br>
+                    <a href="{% url 'stok_faskes:read' %}">CR Riwayat Status Pesanan Sumber Daya</a><br>
+
+                {% elif request.session.role == 'Petugas Faskes' %}
+
+                    <a href="{% url 'stok_faskes:read' %}">Read Stok Fasilitas Kesehatan</a><br>
+
+                {% elif request.session.role == 'Petugas Distribusi' %}
+
+                    <h4> None </h4>
+
+                {% endif %}
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>4</td>
+            <td>
+
+                {% if request.session.role == 'Admin Satgas' %}
+
+                    <a href="{% url 'trigger4:listKendaraan' %}">List Kendaraan</a><br>
+                    <a href="{% url 'trigger4:tambahinKendaraan' %}">Create Kendaraan</a><br>
+                    <a href="{% url 'trigger6_app:batch_pengiriman' %}">Batch Pengiriman</a><br>
+                    <a href="{% url 'crulokasi:daftarlokasi' %}">Daftar Lokasi</a><br>
+                    <a href="{% url 'crulokasi:formcreatelokasi' %}">Create Lokasi</a><br>
+
+
+                {% elif request.session.role == 'Supplier' %}
+
+                    <h4> None</h4>
+
+                {% elif request.session.role == 'Petugas Faskes' %}
+
+                    <h4> None </h4>
+
+                {% elif request.session.role == 'Petugas Distribusi' %}
+
+                    <a href="{% url 'trigger4:listKendaraan' %}">List Kendaraan</a><br>
+
+
+                {% endif %}
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>5</td>
+            <td>
+
+                {% if request.session.role == 'Admin Satgas' %}
+
+                    <a href="{% url 'batch_pengiriman_5:createwares' %}">Create Warehouse</a><br>
+                    <a href="{% url 'batch_pengiriman_5:showwares' %}">Show Warehouse</a><br>
+                    <a href="{% url 'batch_pengiriman_5:createfaskes' %}">Create Faskes</a><br>
+                    <a href="{% url 'batch_pengiriman_5:showfaskes' %}">Show Faskes</a><br>
+
+                {% elif request.session.role == 'Supplier' %}
+
+                    <a href="{% url 'batch_pengiriman_5:showwares' %}">Show Warehouse</a><br>
+                    <a href="{% url 'batch_pengiriman_5:showfaskes' %}">Show Faskes</a><br>
+
+                {% elif request.session.role == 'Petugas Faskes' %}
+
+                    <h4> None </h4>
+
+                {% elif request.session.role == 'Petugas Distribusi' %}
+
+                    <h4> None </h4>
+
+                {% endif %}
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>6</td>
+            <td>
+
+                {% if request.session.role == 'Admin Satgas' %}
+
+                    <a href="{% url 'trigger6_app:create_stock_warehouse' %}">Create Stok Warehouse Satgas / Provinsi</a><br>
+                    <a href="{% url 'trigger6_app:read_stock_warehouse' %}">RUD Stok Warehouse Satgas / Provinsi</a><br>
+                    <a href="{% url 'trigger6_app:batch_pengiriman' %}">CR Batch Pengiriman</a><br>
+                    <a href="{% url 'trigger6_app:batch_pengiriman' %}">CR Riwayat Status Pengiriman</a><br>
+
+                {% elif request.session.role == 'Supplier' %}
+
+                    <h4> None </h4>
+
+                {% elif request.session.role == 'Petugas Faskes' %}
+
+                    <a href="{% url 'trigger6_app:read_stock_warehouse' %}">Read Stok Warehouse Satgas / Provinsi</a><br>
+                    <a href="{% url 'trigger6_app:batch_pengiriman' %}">Read Batch Pengiriman</a><br>
+
+                {% elif request.session.role == 'Petugas Distribusi' %}
+
+                    <a href="{% url 'trigger6_app:batch_pengiriman' %}">Read Batch Pengiriman</a><br>
+                    <a href="{% url 'trigger6_app:batch_pengiriman' %}">Read Riwayat Status Pengiriman</a><br>
+
+                {% endif %}
+
+            </td>
+        </tr>
+    </table>
+
+{% else %}
+
+    <h3 class="text-center">Hi, please Log In or Register</h3>
+
+{% endif %}
+
+    
+</div>
+{% endblock content %}

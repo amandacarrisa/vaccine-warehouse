@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% csrf_token %}
+<div class="container">
+    <section id="list-pesanan">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Nomor Transaksi</th>
+                    <th scope="col">Petugas Satgas</th>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Total Berat</th>
+                    <th scope="col">Total Item</th>
+                    <th scope="col">Total Harga</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for i in pesanan %}
+                    <tr>
+                        <th scope="row">{{ i.0 }}</th>
+                        <td>{{ i.1 }}</td>
+                        <td>{{ i.4 }}</td>
+                        <td>{{ i.5 }}</td>
+                        <td>{{ i.6 }}</td>
+                        <td>{{ i.2 }}</td>
+                        <td>{{ i.7 }}</td>
+                        <td>
+                            {% if request.session.role == 'Admin Satgas' %}
+                                {% if i.7 == 'REQ-SUP' %}
+                                <button onclick="handleUpdate(this)" class="btn btn-primary">Update</button>
+                                <button onclick="handleDelete(this)" class="btn btn-danger">Delete</button>
+                                <br>
+                                <br>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if request.session.role == 'Supplier' %}
+                                {% if i.7 == 'REQ-SUP' %}
+                                <button onclick="handleReject(this)" class="btn btn-primary">Reject</button>
+                                <button onclick="handleProcess(this)" class="btn btn-success">Proccess</button>
+                                <br>
+                                <br>
+                                {% endif %}
+                                {% if i.7 == 'PRO-SUP' %}
+                                <button onclick="handleDoneProblem(this)" class="btn btn-primary">Selesai dengan Masalah</button>
+                                <button onclick="handleDone(this)" class="btn btn-success">Selesai</button>
+                                <br>
+                                <br>
+                                {% endif %}
+                            {% endif %}
+
+                            <button onclick="handleDetail(this)" class="btn btn-primary">Detail</button>
+                            <button onclick="handleRiwayat(this)" class="btn btn-success">Riwayat Status</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+
+<script>
+    getId = (btn) => {
+        return btn.parentElement.parentElement.childNodes[1].innerHTML;
+    }
+
+    handleUpdate = (btn) => {
+        const id = getId(btn);
+        window.location.href = `/pesanan-sumber-daya/update/${id}/`
+    }
+
+    handleDelete = (btn) => {
+        const id = getId(btn);
+        $.post(
+            `/pesanan-sumber-daya/delete/${id}/`,
+            {
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            () => {
+                window.location.href = '/pesanan-sumber-daya/read/'
+            }
+        )
+    }
+
+    handleReject = (btn) => {
+        const id = getId(btn);
+        $.post(
+            `/pesanan-sumber-daya/status/create/${id}`,
+            {
+                status: 'REJ-SUP',
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            () => {
+                location.reload()
+            }
+        )
+    }
+
+    handleProcess = (btn) => {
+        const id = getId(btn);
+        $.post(
+            `/pesanan-sumber-daya/status/create/${id}`,
+            {
+                status: 'PRO-SUP',
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            () => {
+                location.reload()
+            }
+        )
+    }
+
+    handleDoneProblem = (btn) => {
+        const id = getId(btn);
+        $.post(
+            `/pesanan-sumber-daya/status/create/${id}`,
+            {
+                status: 'MAS-SUP',
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            () => {
+                location.reload()
+            }
+        )
+    }
+
+    handleDone = (btn) => {
+        const id = getId(btn);
+        $.post(
+            `/pesanan-sumber-daya/status/create/${id}`,
+            {
+                status: 'FIN-SUP',
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            () => {
+                location.reload() 
+            }
+        )
+    }
+
+    handleDetail = (btn) => {
+        const id = getId(btn);
+        window.location.href = `/pesanan-sumber-daya/detail/${id}`
+    }
+
+    handleRiwayat = (btn) => {
+        const id = getId(btn);
+        window.location.href = `/pesanan-sumber-daya/status/${id}`
+    }
+</script>
+{% endblock content %}

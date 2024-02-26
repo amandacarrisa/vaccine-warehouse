@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">UPDATE WAREHOUSE PROVINSI / SATGAS</h1>
+
+    {% comment %} {% if user.is_authenticated %}
+    <h1>{{user.username}}</h1>
+    {% else %}
+    <h1> ya aint logged in </h1>
+    {% endif %} {% endcomment %}
+    
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="target" class="form-label">Lokasi Lama</label>
+            <select name="target" id="target" class="form-control">
+
+                <option value="{{target}}">{{target}}</option>
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="update" class="form-label">Lokasi Baru</label>
+            <select name="update" id="update" class="form-control">
+            {% for update in updates %}
+
+                <option value="{{update.id}}">{{update.id}} - {{update.provinsi}}</option>
+
+            {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block">Simpan</button>
+    </form>
+</div>
+
+
+{% endblock content %}

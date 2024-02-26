@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-center">TRIGGER 5</h1>
+
+<div class="text-center">
+    <a href="{% url 'batch_pengiriman_5:createwares' %}">Create Warehouse</a><br>
+    <a href="{% url 'batch_pengiriman_5:showwares' %}">Show Warehouse</a><br>
+    <a href="{% url 'batch_pengiriman_5:createfaskes' %}">Create Faskes</a><br>
+    <a href="{% url 'batch_pengiriman_5:showfaskes' %}">Show Faskes</a><br>
+</div>
+
+
+{% endblock content %}

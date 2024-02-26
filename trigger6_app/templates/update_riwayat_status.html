@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center">UBAH STATUS BATCH PENGIRIMAN</h1>
+<form method="POST" action="{% url 'trigger6_app:update_riwayat_status_2' %}">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select name="status" id="status" class="form-control">
+            {% if riwayat_status.0.0 == "PRO" %}
+                <option>OTW</option>
+            {% elif riwayat_status.0.0 == "OTW" %}
+                <option>DLV</option>
+                <option>HLG</option>
+                <option>RET</option>
+            {% endif %}
+        </select>
+    </div>
+    
+    <input hidden name="nomor-transaksi" value="{{ no_transaksi }}">
+
+    <input hidden name="petugas-faskes" value="{{ petugas_faskes }}">
+
+    <button type="submit" class="btn btn-success btn-block" id="tombol-simpan">Simpan</button>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center">LIST STOK WAREHOUSE</h1>
+
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Item Sumber Daya</th>
+        <th scope="col">Jumlah</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for d in data %}
+      <tr>
+        <td>{{ d.1 }}</td>
+        <td>{{ d.2 }}</td>
+        <td>
+            {% if request.session.role == "Admin Satgas" %}
+            <form action="{% url 'trigger6_app:update_stock_warehouse' %}" method="POST">
+                {% csrf_token %}
+                <input hidden name="id-lokasi" value="{{ d.0 }}">
+                <input hidden name="kode-item" value="{{ d.1 }}">
+                <button type="submit" class="btn btn-success btn-sm mb-1" id="tombol-update">Update</button>
+            </form>
+            <br>
+            <form action="{% url 'trigger6_app:delete_stock_warehouse' %}" method="POST">
+                {% csrf_token %}
+                <input hidden name="id-lokasi" value="{{ d.0 }}">
+                <input hidden name="kode-item" value="{{ d.1 }}">
+                <button type="submit" class="btn btn-danger btn-sm mb-1" id="tombol-update">Delete</button>
+            </form>
+            {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

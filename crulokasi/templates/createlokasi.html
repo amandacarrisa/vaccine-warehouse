@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1> <center> Form Lokasi</center></h1>
+
+<div class="outer-form form-column container col-md-4 ">
+    <p class="tulisan_login"><h4><center>Form Lokasi</center></h4></p>
+<form method="POST" action="/crulokasi/createlokasi/">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="validationDefault01">Provinsi</label>
+        <select class="form-control" name="lokasi-provinsi" required>
+            {% for prov in data_provinsi %}
+            <option> {{ prov.provinsi }} </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="validationDefault02">Kabupaten/Kota</label>
+        <input type="text" class="form-control " id="validationDefault02" name="lokasi-kabkot" placeholder="Kab/Kot" required>
+    </div>
+    <div class="form-group">
+        <label for="validationDefault03">Kecamatan</label>
+        <input type="text" class="form-control " id="validationDefault03" name="lokasi-kecamatan" placeholder="Kecamatan" required>
+    </div>
+    <div class="form-group">
+        <label for="validationDefault04">Kelurahan</label>
+        <input type="text" class="form-control " id="validationDefault04" name="lokasi-kelurahan" placeholder="Kelurahan">
+    </div>
+    <div class="form-group">
+        <label for="validationDefault05">Nomor Jalan</label>
+        <input type="text" class="form-control " id="validationDefault05" name="jalan-no" placeholder="Nomor Jalan">
+    </div>
+    <button type="submit" class="btn btn-primary btn-am">Submit</button>
+  </form>
+</div>
+
+
+
+
+{% endblock content %}

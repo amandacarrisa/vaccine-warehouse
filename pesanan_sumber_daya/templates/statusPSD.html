@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Riwayat Status Pesanan Sumber Daya</h1>
+    <p>Nomor Transaksi: {{ id }}</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Kode Status</th>
+                <th scope="col">Status</th>
+                <th scope="col">Username Supplier</th>
+                <th scope="col">Tanggal Persetujuan</th>
+            </tr>
+        </thead>
+
+        <tbody id='statusList'>
+            {% for i in status2 %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ i.0 }}</td>
+                <td>{{ i.5 }}</td>
+                <td>{{ i.2 }}</td>
+                <td>{{ i.3 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

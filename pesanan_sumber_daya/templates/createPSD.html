@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <section id="pesanan">
+        <h1 class="text-center">Form Pesanan Sumber Daya</h1>
+        <form method="POST" id="add-pesanan">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nomorTransaksi" class="form-label">Nomor Transaksi</label>
+                <input type="text" class="form-control" value="{{ noTransaksi }}" name="nomorTransaksi" id="nomorTransaksi" disabled required>
+            </div>
+
+            <div class="mb-3">
+                <label for="petugas" class="form-label">Petugas</label>
+                <input type="text" class="form-control" value="{{ request.session.username }}" name="petugas" id="petugas" disabled required> 
+            </div>
+
+            <div class="mb-3">
+                <label for="supplier" class="form-label">Supplier</label>
+                <!-- <select onchange="handleChange(this)" class="form-control" name="supplier" id="supplier"> -->
+                <select class="form-control" name="supplier" id="supplier">
+                    <option selected disabled value="">Pilih Supplier :</option>
+                    {% for s in suppliers %}
+                    <option value="{{ s.0 }}">{{ s.0 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="noUrut" class="form-label">Nomor Urut</label>
+                <input type="text" class="form-control" value="{{ noTransaksi }}" name="noUrut" id="noUrut" disabled required>
+            </div>
+
+            <div class="mb-3">
+                <label for="item" class="form-label">Kode Item</label>
+                <select class="form-control" name="item" id="item">
+                    <option selected disabled value="">Pilih Item :</option>
+                    {% for i in items %}
+                    <option value="{{ i.0 }}">{{ i.0 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="jumlahItem" class="form-label">Jumlah Item</label>
+                <input type="number" class="form-control" name="jumlah" id="jumlah" min="1" required>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">TAMBAH</button>
+        </form>
+    </section>
+
+    <section id="daftar-pesanan">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">No. Urut</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Harga Satuan</th>
+                    <th scope="col">Jumlah Item</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="table-body"></tbody>
+        </table>
+
+        <!-- <button type="submit" class="btn btn-success btn-block">SIMPAN</button> -->
+    </section>
+</div>
+
+<script>
+    let data = [];
+    let form_data = {};
+
+    // handleChange = (object) => {
+    //     const tempSupplier = object.value;
+    //     setItem(tempSupplier);
+    //     $('#table-body').empty();
+    //     data = [];
+    //     $('#noUrut').val();
+    //     form_data = {
+    //         ...form_data,
+    //         supplier: tempSupplier
+    //     }
+    // }
+
+    // $(document).ready(() => {
+    //     const tempSupplier = $('#supplier').val();
+    //     form_data = {
+    //         nomorTransaksi: $('#nomorTransaksi').val(),
+    //         petugas: $('#petugas').val(),
+    //         supplier: tempSupplier
+    //     }
+    //     setItem(tempSupplier);
+    // })
+
+    // setItem = (supplier) => {
+    //     tempItem = $('select#item');
+    //     tempItem.empty();
+    //     const allItem = getAllItem();
+    //     const currentItem = allItem.filter((item) => {
+    //         return item[1] === supplier
+    //     });
+    //     currentItem.forEach((item) => {
+    //         tempItem.append(`<option value="${item[0]}">${item[2]}</option>`)
+    //     });
+    // }
+
+    getItem = (id) => {
+        const allItem = getAllItem();
+        for (const i of allItem) {
+            if(i[0] == id) {
+                return i;
+            }
+        }
+    }
+
+    getAllItem = () => {
+        const allItem = {{ items|safe }};
+        return allItem;
+    }
+
+    $('#add-pesanan').submit((event) => {
+        event.preventDefault();
+        const item = getItem($('#item').val());
+        console.log("item = " + item);
+        data.push([...item, parseInt($('#jumlah').val()), parseInt($('#noUrut').val()), parseInt($('#nomorTransaksi').val())]);
+        $('#table-body').append(`
+            <tr>
+                <th scope"row">${$('#noUrut').val()}</th>
+                <td>${item[2]}</td>
+                <td>${item[3]}</td>
+                <td>${$('#jumlah').val()}</td>
+                <td>
+                    <button onClick="handleDelete(this)" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        `);
+        $('#nomorTransaksi').val(parseInt($('#nomorTransaksi').val()) + 1)
+        $('#noUrut').val(parseInt($('#noUrut').val()) + 1)
+        $('#jumlah').val('');
+
+        if (data.length === 0) {
+            alert('No item found');
+            return;
+        }
+        console.log("data " + data);
+        console.log("json " + JSON.stringify(data[0][0]));
+        $.post(
+            `/pesanan-sumber-daya/create/post`,
+            {
+                kodeISD: data[0][0],
+                supplier: data[0][1],
+                item: data[0][2],
+                harga: data[0][3],
+                berat: data[0][4],
+                kodeTI: data[0][5],
+                jumlahItem: data[0][6],
+                noUrut: data[0][7],
+                nomorTransaksi: data[0][8],
+                datas: JSON.stringify(data[0]),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            () => {
+                window.location.href = '/pesanan-sumber-daya/create'
+            }
+        );
+    });
+
+    handleDelete = (object) => {
+        const namaItem = object.parentElement.parentElement.childNodes[3].innerHTML;
+        const jumlahItem = object.parentElement.parentElement.childNodes[7].innerHTML;
+        data = data.filter(item => item[2] != namaItem || item[6] != jumlahItem);
+        object.parentElement.parentElement.remove();
+    }
+    
+</script>
+{% endblock content %}

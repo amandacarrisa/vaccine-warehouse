@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block header %}
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+
+{% endblock header %}
+
+{% block content %}
+<div class="container">
+    <br><br>
+    <h1 class="text-center">LIST FASKES</h1>
+    <br><br>
+
+    {% if request.session.role == "Admin Satgas" or request.session.role == "Supplier"%}
+        <table>
+            <tr>
+                <th>Kode Faskes</th>
+                <th>Lokasi</th>
+                <th>Petugas Faskes</th>
+                <th>Tipe Faskes</th>
+                {% if request.session.role == "Admin Satgas" %}
+                <th>Aksi</th>
+                {% endif %}
+            </tr>
+
+        {% for fask in fasks %}
+
+            <tr>
+                <th>{{fask.kode_faskes_nasional}}</th>
+                <th>{{fask.jalan_no}}, {{fask.kelurahan}}, {{fask.kecamatan}}, {{fask.kabkot}}, {{fask.provinsi}}</th>
+                <th>{{fask.username_petugas}}</th>
+                <th>{{fask.kode_tipe_faskes}}</th>
+                {% if request.session.role == "Admin Satgas" %}
+                <th>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input required name="kode_faskes_nasional" type="hidden" class="form-control" id="kode_faskes_nasional" value="{{fask.kode_faskes_nasional}}" >
+                        <div class="mb-3">
+                            <select name="action" id="action" class="form-control">
+                                <option value="delete">delete</option>
+                                {% comment %} <option value="update">update</option> {% endcomment %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">Lakukan</button>
+
+                        
+                    </form>
+                    <a href="/trig5/updatefask/{{fask.kode_faskes_nasional}}">update</a>
+                </th>
+                {% endif %}
+            </tr>
+
+        {% endfor %}
+    
+        </table>
+        <br><br><br><br><br>
+    {% else %}
+    
+    <h3 class="text-center">You need to be either a registered Supplier or an Admin Satgas</h3>
+
+    {% endif %}
+
+</div>
+{% endblock content %}

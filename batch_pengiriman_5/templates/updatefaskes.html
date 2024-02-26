@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">UPDATE FASKES</h1>
+
+    {% comment %} {% if user.is_authenticated %}
+    <h1>{{user.username}}</h1>
+    {% else %}
+    <h1> ya aint logged in </h1>
+    {% endif %} {% endcomment %}
+    
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="target" class="form-label">target</label>
+            <select name="target" id="target" class="form-control">
+
+                <option value="{{target}}">{{target}}</option>
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_lokasi" class="form-label">id_lokasi</label>
+            <select name="id_lokasi" id="id_lokasi" class="form-control">
+            {% for id in ids %}
+
+                <option value="{{id.id}}">{{id.id}} - {{id.provinsi}}</option>
+
+            {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="username_petugas" class="form-label">username_petugas</label>
+            <select name="username_petugas" id="username_petugas" class="form-control">
+            {% for username in usernames %}
+
+                <option value="{{username.username}}">{{username.username}}</option>
+
+            {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="kode_tipe_faskes" class="form-label">kode_tipe_faskes</label>
+            <select name="kode_tipe_faskes" id="kode_tipe_faskes" class="form-control">
+            {% for code in codes %}
+
+                <option value="{{code.kode}}">{{code.kode}}</option>
+
+            {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block">Simpan</button>
+    </form>
+</div>
+
+
+{% endblock content %}

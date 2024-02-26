@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <section id="list-faskes">
+        <h1 class="text-center">List Data Faskes</h1>
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-12">
+                {% csrf_token %}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Kode Faskes</th>
+                            <th scope="col">Nama Faskes</th>
+                            <th scope="col">Item Sumber Daya</th>
+                            <th scope="col">Jumlah</th>
+                            {% if role == "Admin Satgas" %}
+                            <th scope="col">Action</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in data %}
+                        <tr id="{{i.0}}-{{i.1}}">
+                            <td scope="row">{{ i.0 }}</td>
+                            <td scope="row">{{ i.2 }}</td>
+                            <td scope="row">{{ i.3 }}</td>
+                            <td scope="row">{{ i.4 }}</td>
+                            {% if role == "Admin Satgas" %}
+                            <td>
+                                <button type="button" class="btn btn-primary" onclick="handleUpdate(this)">Update</button>
+                                <button type="button" class="btn btn-danger" onclick="handleDelete(this)">Delete</button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    handleUpdate = (button) => {
+        const tempId = button.parentElement.parentElement.id.split('-');
+        const [idFaskes, idItem] = tempId;
+        window.location = `/stok-faskes/update/${idFaskes}/${idItem}/`
+    }
+
+    handleDelete = (button) => {
+        console.log("deleted?");
+        const tempId = button.parentElement.parentElement.id.split('-');
+        const [idFaskes, idItem] = tempId;
+        $.post(
+            `/stok-faskes/delete/${idFaskes}/${idItem}/`,
+            {
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            () => {
+                location.reload()
+                alert("Data deleted")
+            }
+        )
+    }
+</script>
+{% endblock content %}

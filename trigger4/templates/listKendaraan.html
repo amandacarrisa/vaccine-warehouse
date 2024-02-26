@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .tabelmargin{
+        padding: 32px;
+    }
+</style>
+
+
+
+
+
+<h1><center>Daftar Kendaraan</center></h1>
+<div class="tabelmargin table-responsive">
+    <table class="table justify-content-center">
+        <thead class="bg-danger text-white align-items-center">
+            <tr>
+                <th scope="col">Nomor Kendaraan</th>
+                <th scope="col">Nama Kendaraan</th>
+                <th scope="col">Jenis Kendaraan</th>
+                <th scope="col">Berat Maksimum</th>
+                {% if request.session.role == "Admin Satgas" %}
+                <th scope="col">Action</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for kendaraan in data_kendaraan %}
+            <tr>
+                <td>{{ kendaraan.nomor }}</td>
+                <td>{{ kendaraan.nama }}</td>
+                <td>{{ kendaraan.jenis_kendaraan }}</td>
+                <td>{{ kendaraan.berat_maksimum }}</td>
+                    {% if request.session.role == "Admin Satgas" %}
+                <td>
+                    <button class="btn btn-primary btn-am bg-success update" 
+                    no-kendaraan="{{ kendaraan.nomor }}"
+                    nama-kendaraan="{{ kendaraan.nama }}"
+                    jenis-kendaraan="{{ kendaraan.jenis_kendaraan }}"
+                    berat-maksimum="{{ kendaraan.berat_maksimum }}"
+                    >Update</button>
+                    <div class="modal fade" id="update-kendaraan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Form Update Kendaraan</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" action="/" id="form-update">
+                                {% csrf_token %}
+                                
+                                <div class="form-group">
+                                    <label for="no">Nomor Kendaraan</label>
+                                    <input type="text" class="form-control " id="no" name="u-nomor-kendaraan" placeholder="Nomor Kendaraan" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="namanya">Nama Kendaraan</label>
+                                    <input type="text" class="form-control " id="namanya" name="u-nama-kendaraan" placeholder="Nama Kendaraan" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="jenisnya">Jenis Kendaraan</label>
+                                    <input type="text" class="form-control " id="jenisnya" name="u-jenis-kendaraan" placeholder="Jenis Kendaraan" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="beratnya">Berat Maksimum</label>
+                                    <input type="text" class="form-control " id="beratnya" name="u-berat-maksimum" placeholder="Berat Maksimum" required>
+                                </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    
+                                    <button type="submit" class="btn bg-success btn-primary ">Submit</button>
+                                    
+                                  </div>
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <a href="/trigger4/deletekendaraan/{{ kendaraan.nomor }}">
+                        <button type="button" class="btn btn-primary btn-am bg-danger">Delete</button>
+                    </a>
+                </td>
+                {% endif %}
+
+            
+            
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $('.update').click(function(){
+      $('#update-kendaraan').modal();
+    var nokendaraan = $(this).attr('no-kendaraan')
+    var namaapotek = $(this).attr('nama-kendaraan')
+    var jeniskendaraan = $(this).attr('jenis-kendaraan')
+    var beratmaksimum = $(this).attr('berat-maksimum')
+
+    
+    $('#form-update').attr('action', '/trigger4/updatekendaraan/'+nokendaraan)
+    $('#no').val(nokendaraan)
+    $('#namanya').val(namaapotek)
+    $('#jenisnya').val(jeniskendaraan)
+    $('#beratnya').val(beratmaksimum)
+    })
+
+  </script>
+{% endblock content %}

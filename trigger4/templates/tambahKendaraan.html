@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<h1> <center>Form Kendaraan</center></h1>
+<div class="outer-form form-column container col-md-4 ">
+    <h4><center>Form Tambah Kendaraan</center></h4>
+ 
+    <form action="/trigger4/formKendaraan/" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="validationDefault01">Nomor Kendaraan</label>
+        <input type="text" class="form-control " id="validationDefault02" name="nokendaraan" placeholder="Nomor Kendaraan" required>
+      </div>
+      <div class="form-group">
+        <label for="validationDefault01">Nama Kendaraan</label>
+        <input type="text" class="form-control " id="validationDefault02" name="nama" placeholder="Nama Kendaraan" required>
+      </div>
+      <div class="form-group">
+        <label for="validationDefault01">Jenis Kendaraan</label>
+        <input type="text" class="form-control " id="validationDefault02" name="jeniskendaraan" placeholder="Jenis Kendaraan" required>
+      </div>
+      <div class="form-group">
+        <label for="validationDefault01">Berat Maksimum</label>
+        <input type="text" class="form-control " id="validationDefault02" name="beratmaksimum" placeholder="Berat Maksimum" required>
+      </div>
+      
+      <input class="btn btn-primary" type="submit" value="Submit">
+  </form>
+</div>
+
+{% endblock content %}

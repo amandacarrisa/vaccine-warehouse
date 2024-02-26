@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <section id="updateStokFaskes">
+        <h1 class="text-center">Form Edit Stock Faskes</h1>
+        <form method="POST" id="update-stok">
+            {% csrf_token %}
+            {% for i in data %}
+            <div class="mb-3">
+                <label for="kodeFaskes" class="form-label">Kode Faskes</label>
+                <input type="text" class="form-control" name="kodeFaskes" id="kodeFaskes" value="{{ i.0 }}" disabled required>
+            </div>
+            <div class="mb-3">
+                <label for="faskes" class="form-label">Faskes</label>
+                <input type="text" class="form-control" name="faskes" id="faskes" value="{{ dataFaskes }}" disabled required>
+            </div>
+            <div class="mb-3">
+                <label for="kodeItem" class="form-label">Kode Item</label>
+                <input type="text" class="form-control" name="kodeItem" id="kodeItem" value="{{ i.1 }}" disabled required>
+            </div>
+            <div class="mb-3">
+                <label for="itemSumberDaya" class="form-label">itemSumberDaya</label>
+                <input type="text" class="form-control" name="itemSumberDaya" id="itemSumberDaya" value="{{ dataItem }}" disabled required>
+            </div>
+            <div class="mb-3">
+                <label for="jumlah" class="form-label">Jumlah</label>
+                <input type="number" class="form-control" name="jumlah" id="jumlah" value="{{ i.2 }}" min=0 placeholder="Tulis jumlah item" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">SIMPAN</button>
+            {% endfor %}
+        </form>
+    </section>
+</div>
+<script>
+    $('#update-stok').submit((event) => {
+        event.preventDefault();
+        console.log($('#kodeFaskes').val());
+        console.log($('#kodeItem').val());
+        console.log($('#jumlah').val());
+
+        if($('#jumlah').val() == "") {
+            alert('Terdapat data yang belum diisi, silahkan lengkapi data terlebih dahulu')
+            return;
+        }
+
+        $.post(
+            `/stok-faskes/update/${$('#kodeFaskes').val()}/${$('#kodeItem').val()}/post/`,
+            {
+                jumlah: $('#jumlah').val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            () => {
+                window.location.href = '/stok-faskes/read/'
+            }
+        )
+    })
+</script>
+{% endblock content %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    body{
+        background-color: #dc3545;
+    }
+</style>
+
+
+
+<h1 class="text-white"> <center> Form Kendaraan </center></h1>
+
+<div class="outer-form form-column col-4 ">
+  <p class="tulisan_login"><h4><center>Update Kendaraan</center></h4></p>
+<form>
+  <div class="form-group">
+    <label for="disabledTextInput">Nomor Kendaraan</label>
+    <input type="text" class="form-control " id="disabledTextInput" placeholder="Nomor Kendaraan">
+  </div>
+  <div class="form-group">
+    <label for="disabledTextInput">Nama Kendaraan</label>
+    <input type="text" class="form-control " id="disabledTextInput" placeholder="Nama Kendaraan">
+  </div>
+  <div class="form-group">
+    <label for="validationDefault03">Jenis Kendaraan</label>
+    <input type="text" class="form-control " id="validationDefault03" placeholder="Jenis Kendaraan">
+  </div>
+  <div class="form-group">
+      <label for="validationDefault04">Berat Maksimum</label>
+      <input type="text" class="form-control " id="validationDefault04" placeholder="Berat Maksimum">
+  </div>
+
+  <button type="button" class="btn btn-primary  btn-am bg-secondary ">Back</button>
+  <button type="submit" class="btn btn-primary  btn-am">Submit</button>
+  </form>
+</div>
+
+{% endblock %}

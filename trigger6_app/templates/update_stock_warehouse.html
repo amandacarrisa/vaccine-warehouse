@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center">FORM UBAH STOCK WAREHOUSE SATGAS</h1>
+<div class="container">
+    <form method="POST" action="{% url 'trigger6_app:update_stock_warehouse_2' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="lokasi-id" class="form-label">ID Lokasi</label>
+            <select name="lokasi-id" id="lokasi-id" class="form-control">
+                <option>{{ lokasi.0 }}</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="span-detloc" class="form-label">Detail Lokasi</label>
+            <div id="span-detloc">
+                <span>Provinsi: {{ lokasi.1 }}</span><br>
+                <span>Kabupaten/Kota: {{ lokasi.2 }}</span><br>
+                <span>Kecamatan: {{ lokasi.3 }}</span><br>
+                <span>Kelurahan: {{ lokasi.4 }}</span><br>
+                <span>Nomor Jalan: {{ lokasi.5 }}</span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="kode-item" class="form-label">Kode Item Sumber Daya</label>
+            <select name="kode-item" id="kode-item" class="form-control">
+                <option>{{ item.0 }}</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="span-isd" class="form-label">Detail Item Sumber Daya</label>
+            <div id="span-isd">
+                <span>Username Supplier: {{ item.1 }}</span><br>
+                <span>Nama Item: {{ item.2 }}</span><br>
+                <span>Harga Satuan: {{ item.3 }}</span><br>
+                <span>Berat Satuan: {{ item.4 }}</span><br>
+                <span>Kode Tipe Item: {{ item.5 }}</span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="jumlah" id="form-label">Jumlah</label>
+            <input type="number" name="jumlah" id="jumlah" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block" id="tombol-submit">Ubah</button>
+    </form>
+</div>
+
+<script>
+    $('document').ready(function() {
+        $("#tombol-submit").on("click", function(event) {
+            if(!$("#jumlah").val()) {
+                event.preventDefault()
+                alert("Terdapat data yang belum diisi, silakan lengkapi datanya dulu")
+            }
+        })
+    })
+    
+</script>
+{% endblock content %}

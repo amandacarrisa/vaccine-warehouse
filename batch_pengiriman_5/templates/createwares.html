@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">CREATE WAREHOUSE PROVINSI / SATGAS</h1>
+
+    {% if request.session.role == "Admin Satgas" %}
+    
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="provinsi" class="form-label">provinsi</label>
+                <select name="provinsi" id="provinsi" class="form-control">
+                {% for prov in provs %}
+
+                    <option value="{{prov.id}}">{{prov.provinsi}} ID : {{prov.id}}</option>
+
+                {% endfor %}
+                </select>
+
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">Simpan</button>
+        </form>
+
+    {% else %}
+
+        <h3 class="text-center">You need to be a registered Admin Satgas</h3>
+
+    {% endif %}
+
+</div>
+
+
+{% endblock content %}

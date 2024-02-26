@@ -1,0 +1,1 @@
+A web development project utilizing Django framework to simulate a Covid vaccine supply management website for warehouses, incorporating CRUD functionalities. Contributed across all development stages, encompassing database maintenance, web design, and deployment tasks.
